@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pilih Lokasi di Peta - Deteksi Kualitas Udara</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        #map { height: 500px; width: 100%; margin-top: 20px; }
+        #search-form { margin: 20px 0; }
+        #air-quality-info { margin-top: 20px; padding: 10px; border: 1px solid #ddd; width: 100%; max-width: 400px; }
+    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="container">
+        <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+                <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
+                <span class="fs-4">Aircare</span>
+            </a>
+            <ul class="nav nav-pills">
+                <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="/input_coordinates" class="nav-link">Koordinat</a></li>
+                <li class="nav-item"><a href="/input_map" class="nav-link">Map</a></li>
+                <li class="nav-item"><a href="/about_us" class="nav-link">About Us</a></li>
+            </ul>
+        </header>
+    </div>
+
+    <!-- Konten Utama -->
+    <div class="container my-4">
+        <h1 class="text-center">Pilih Lokasi di Peta</h1>
+
+        <!-- Form pencarian untuk lokasi -->
+        <div id="search-form" class="d-flex flex-column flex-md-row align-items-md-center">
+            <label for="search" class="form-label mb-2 mb-md-0">Cari Kota atau Lokasi:</label>
+            <input type="text" id="search" class="form-control me-2" placeholder=" " style="max-width: 300px;">
+            <button onclick="searchLocation()" class="btn btn-primary mt-2 mt-md-0">Cari</button>
+        </div>
+
+        <!-- Peta -->
+        <div id="map"></div>
+
+        <!-- Area untuk menampilkan informasi kualitas udara -->
+         
+        <div id="air-quality-info" class="mx-auto mt-4">
+            <h2>Informasi Kualitas Udara</h2>
+            <p><strong>Koordinat:</strong> <span id="coordinates">-</span></p>
+            <p id="aqi">AQI: -</p>
+            <p id="pm25">PM2.5: -</p>
+            <p id="pm10">PM10: -</p>
+            <p id="temp">Temperatur: -</p>
+            <p id="pressure">Tekanan Udara: -</p>
+            <p id="humidity">Kelembaban: -</p>
+            <p id="wind">Kecepatan Angin: -</p>
+            <p id="advice">Saran: -</p>
+        </div>
+    </div>
+
+    <!-- Script untuk Peta dan Fungsi API -->
+    <script>
+        // Inisialisasi peta
+        var map = L.map('map').setView([-6.2088, 106.8456], 13);  // Lokasi default di Jakarta
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+        }).addTo(map);
+
+        // Fungsi untuk memperbarui informasi kualitas udara
+        function updateAirQuality(lat, lon) {
+            fetch(`/air_quality_by_coords?lat=${lat}&lon=${lon}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("coordinates").innerText = `Latitude: ${lat}, Longitude: ${lon}`;
+                    if (data.aqi) {
+                        document.getElementById("aqi").innerHTML = `AQI: ${data.aqi} (${data.category})`;
+                        document.getElementById("aqi").className = data.class_color;
+                        document.getElementById("pm25").innerHTML = `PM2.5: ${data.pm25} µg/m³`;
+                        document.getElementById("pm10").innerHTML = `PM10: ${data.pm10} µg/m³`;
+                        document.getElementById("temp").innerHTML = `Temperatur: ${data.temp}°C`;
+                        document.getElementById("pressure").innerHTML = `Tekanan Udara: ${data.pressure} hPa`;
+                        document.getElementById("humidity").innerHTML = `Kelembaban: ${data.humidity}%`;
+                        document.getElementById("wind").innerHTML = `Kecepatan Angin: ${data.wind} m/s`;
+                        document.getElementById("advice").innerHTML = `Saran: ${data.health_advice}`;
+                    } else {
+                        document.getElementById("aqi").innerHTML = "AQI: Data tidak tersedia";
+                        document.getElementById("pm25").innerHTML = "PM2.5: Data tidak tersedia";
+                        document.getElementById("pm10").innerHTML = "PM10: Data tidak tersedia";
+                        document.getElementById("temp").innerHTML = "Temperatur: Data tidak tersedia";
+                        document.getElementById("pressure").innerHTML = "Tekanan Udara: Data tidak tersedia";
+                        document.getElementById("humidity").innerHTML = "Kelembaban: Data tidak tersedia";
+                        document.getElementById("wind").innerHTML = "Kecepatan Angin: Data tidak tersedia";
+                        document.getElementById("advice").innerHTML = "Saran: Data tidak tersedia";
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Fungsi untuk melakukan pencarian lokasi menggunakan Nominatim API
+        function searchLocation() {
+            var searchQuery = document.getElementById("search").value;
+            var nominatimUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${searchQuery}`;
+
+            fetch(nominatimUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.length > 0) {
+                        // Ambil hasil pencarian pertama yang paling relevan
+                        var location = data[0];
+                        var lat = location.lat;
+                        var lon = location.lon;
+
+                        // Pindahkan peta ke lokasi hasil pencarian
+                        map.setView([lat, lon], 13);
+
+                        // Perbarui informasi kualitas udara berdasarkan lokasi hasil pencarian
+                        updateAirQuality(lat, lon);
+                    } else {
+                        alert("Lokasi tidak ditemukan. Coba masukkan nama kota atau lokasi lain.");
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Event handler untuk klik pada peta
+        map.on('click', function(e) {
+            var lat = e.latlng.lat;
+            var lon = e.latlng.lng;
+
+            // Pindahkan peta ke lokasi yang diklik dan perbarui informasi kualitas udara
+            map.setView([lat, lon], 13);
+            updateAirQuality(lat, lon);
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+</body>
+</html>

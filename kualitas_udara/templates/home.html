@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kualitas Udara</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="container">
+        <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+                <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
+                <span class="fs-4">Aircare</span>
+            </a>
+            <ul class="nav nav-pills">
+                <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="/input_coordinates" class="nav-link">Koordinat</a></li>
+                <li class="nav-item"><a href="/input_map" class="nav-link">Map</a></li>
+                <li class="nav-item"><a href="/about_us" class="nav-link">About Us</a></li>
+            </ul>
+        </header>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container my-4">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1>Pilih Metode Input Kualitas Udara</h1>
+                <p class="lead">Pilih cara memasukkan data kualitas udara yang Anda inginkan.</p>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="list-group">
+                    <a href="/input_coordinates" class="list-group-item list-group-item-action">
+                        <h5 class="mb-1">Koordinat Manual</h5>
+                        <p class="mb-1">Masukkan koordinat manual untuk mengetahui kualitas udara.</p>
+                    </a>
+                    <a href="/input_map" class="list-group-item list-group-item-action">
+                        <h5 class="mb-1">Pilih Lokasi di Peta</h5>
+                        <p class="mb-1">Gunakan peta interaktif untuk memilih lokasi.</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <br>
+    <hr>
+    <!-- Main Content -->
+    <main class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="col-12 text-center">
+                    <p class="lead">Informasi</p>
+                </div>
+                <!-- AQI Section -->
+                <div class="content-section">
+                    <h2 class="section-title">AQI (Indeks Kualitas Udara)</h2>
+                    <p>AQI atau Indeks Kualitas Udara  adalah ukuran yang menunjukkan tingkat polusi udara di suatu wilayah. AQI memungkinkan orang-orang memahami kualitas udara di lingkungan mereka dan bagaimana hal itu berdampak pada kesehatan mereka. AQI menunjukkan kualitas udara sehari-hari dan memprediksi risiko kesehatan, yang sangat membantu orang membuat keputusan tentang hal-hal di luar, terutama bagi mereka yang rentan terhadap polusi udara. AQI juga meningkatkan kesadaran akan pentingnya mempertahankan lingkungan dan mengurangi polusi.</p>
+                    <p>Rentang AQI di Indonesia adalah sebagai berikut:</p>
+                    <ul>
+                        <li><strong>0–50</strong>: Baik, sedikit atau tidak ada risiko bagi kesehatan.</li>
+                        <li><strong>51–100</strong>: Sedang, ada risiko bagi orang yang sangat sensitif.</li>
+                        <li><strong>101–150</strong>: Tidak Sehat bagi Kelompok Sensitif, dampak kesehatan mungkin terjadi.</li>
+                        <li><strong>151–200</strong>: Tidak Sehat, dapat menyebabkan dampak pada semua orang.</li>
+                        <li><strong>201–300</strong>: Sangat Tidak Sehat, risiko kesehatan lebih tinggi bagi masyarakat.</li>
+                        <li><strong>301 ke atas</strong>: Berbahaya, kondisi darurat kesehatan bagi semua orang.</li>
+                    </ul>
+                </div>
+
+                <!-- PM2.5 Section -->
+                <div class="content-section">
+                    <h2 class="section-title">PM2.5</h2>
+                    <p>PM2.5 adalah partikel halus di udara dengan diameter 2,5 mikrometer atau lebih kecil, sekitar 30 kali lebih kecil dari diameter rambut manusia. Karena ukurannya yang sangat kecil, PM2.5 dapat terhirup ke bagian terdalam paru-paru dan bahkan masuk ke aliran darah, yang dapat menyebabkan gangguan pernapasan, penyakit jantung, dan kondisi medis yang lebih parah. WHO (Organisasi Kesehatan Dunia) merekomendasikan bahwa konsentrasi PM2.5 dalam udara tidak boleh melebihi 15 g/m3 (mikrogram per meter kubik) selama 24 jam dan 5 g/m3 selama tahunan.</p>
+                </div>
+
+                <!-- PM10 Section -->
+                <div class="content-section">
+                    <h2 class="section-title">PM10</h2>
+                    <p>Partikel udara PM10 adalah berukuran 10 mikrometer atau lebih kecil, yang berarti lebih besar dari PM2.5, tetapi masih cukup kecil untuk dihirup dan masuk ke sistem pernapasan. Mereka biasanya berasal dari polusi industri, aktivitas konstruksi, pembakaran bahan bakar fosil, debu jalanan, dan peristiwa alam seperti erosi tanah dan kebakaran hutan. Batas aman PM10 adalah 45 g/m3 untuk paparan jangka pendek (24 jam) dan 15 g/m3 untuk paparan tahunan, menurut standar kualitas udara WHO (WHO).</p>
+                </div>
+
+                <!-- Temperature Section -->
+                <div class="content-section">
+                    <h2 class="section-title">Temperatur</h2>
+                    <p>Temperatur, yang menunjukkan seberapa panas atau dingin suatu tempat, sangat penting untuk kenyamanan dan kesehatan manusia. Kesehatan fisik kita, seperti hidrasi, pernapasan, dan fungsi tubuh lainnya, dipengaruhi oleh suhu lingkungan kita. Suhu luar ruangan yang nyaman untuk kebanyakan orang biasanya antara 18 dan 30 derajat Celcius; namun, suhu normal yang nyaman di luar ruangan bervariasi tergantung pada aktivitas, kelembapan, dan sirkulasi udara.</p>
+                </div>
+
+                <!-- Air Pressure Section -->
+                <div class="content-section">
+                    <h2 class="section-title">Tekanan Udara</h2>
+                    <p>Berat udara di atmosfer yang menekan permukaan Bumi dan segala sesuatu di atasnya disebut tekanan udara. Tekanan udara diukur dalam satuan hektopascal (hPa) atau millibar (mbar). Kondisi cuaca, seperti hujan, angin, dan perubahan suhu, dipengaruhi oleh tekanan udara. Secara umum, tekanan udara antara 980 - 1030 hPa dianggap sebagai batas normal permukaan laut, dan perubahan dalam rentang ini biasanya tidak memengaruhi kesehatan manusia secara signifikan. Batas tekanan udara normal biasanya lebih rendah di tempat yang lebih tinggi dari permukaan laut.</p>
+                </div>
+
+                <!-- Humidity Section -->
+                <div class="content-section">
+                    <h2 class="section-title">Kelembapan</h2>
+                    <p>Kelembapan adalah ukuran jumlah uap air yang ada di udara. Ini sangat memengaruhi kenyamanan, cuaca, dan kondisi kesehatan seseorang. Kelembapan relatif (RH), yang biasanya ditunjukkan dalam persentase (%), menunjukkan seberapa jenuh udara dengan uap air pada suhu tertentu. Jika kelembapan di luar ruangan lebih dari 60% atau lebih, itu dapat membuat cuaca pengap dan tidak nyaman, bahkan pada suhu yang tidak terlalu tinggi. Batas kelembapan yang ideal untuk manusia biasanya sekitar 40% hingga 60% .</p>
+                </div>
+
+                <!-- Wind Speed Section -->
+                <div class="content-section">
+                    <h2 class="section-title">Kecepatan Angin</h2>
+                    <p>Kecepatan angin diukur dalam meter per detik (m/s) atau kilometer per jam (km/jam). Cuaca, kenyamanan, dan aktivitas manusia dipengaruhi oleh kecepatan angin. Angin kencang dapat mengganggu aktivitas luar ruangan dan bahkan menimbulkan bahaya, tetapi angin ringan dapat memberikan kesejukan pada hari yang panas. Angin dengan kecepatan antara 1–5 m/s (3.6–18 km/jam) umumnya dianggap nyaman dan tidak mengganggu aktivitas sehari-hari. Angin terasa sejuk dan membantu sirkulasi udara, terutama di iklim panas. Meskipun angin dapat terasa lebih kuat dan dapat menyebabkan ketidaknyamanan bagi beberapa orang, kecepatan angin 5–10 m/s (18-36 km/jam) masih dapat diterima.</p>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Bootstrap Script -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
